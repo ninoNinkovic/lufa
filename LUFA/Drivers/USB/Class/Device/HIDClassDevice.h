@@ -120,6 +120,13 @@
 				          */
 			} USB_ClassInfo_HID_Device_t;
 
+			enum HID_Device_USBTask_Status {
+				HID_USBTASK_NoError   = 0,
+				HID_USBTASK_NoConfig  = 1,
+				HID_USBTASK_Throttled = 2,
+				HID_USBTASK_NoRW      = 3,
+			};
+
 		/* Function Prototypes: */
 			/** Configures the endpoints of a given HID interface, ready for use. This should be linked to the library
 			 *  \ref EVENT_USB_Device_ConfigurationChanged() event so that the endpoints are configured when the configuration
@@ -143,7 +150,7 @@
 			 *
 			 *  \param[in,out] HIDInterfaceInfo  Pointer to a structure containing a HID Class configuration and state.
 			 */
-			void HID_Device_USBTask(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo) ATTR_NON_NULL_PTR_ARG(1);
+			uint8_t HID_Device_USBTask(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo) ATTR_NON_NULL_PTR_ARG(1);
 
 			/** HID class driver callback for the user creation of a HID IN report. This callback may fire in response to either
 			 *  HID class control requests from the host, or by the normal HID endpoint polling procedure. Inside this callback the

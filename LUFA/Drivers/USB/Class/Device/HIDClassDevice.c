@@ -149,18 +149,18 @@ bool HID_Device_ConfigureEndpoints(USB_ClassInfo_HID_Device_t* const HIDInterfac
 	return true;
 }
 
-void HID_Device_USBTask(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo)
+uint8_t HID_Device_USBTask(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo)
 {
 	if (USB_DeviceState != DEVICE_STATE_Configured)
-	  return;
+		return HID_USBTASK_NoConfig;
 
 	if (HIDInterfaceInfo->State.PrevFrameNum == USB_Device_GetFrameNumber())
 	{
 		#if defined(USB_DEVICE_OPT_LOWSPEED)
 		if (!(USB_Options & USB_DEVICE_OPT_LOWSPEED))
-		  return;
+		return HID_USBTASK_Throttled;
 		#else
-		return;
+		return HID_USBTASK_Throttled;
 		#endif
 	}
 
@@ -200,7 +200,9 @@ void HID_Device_USBTask(USB_ClassInfo_HID_Device_t* const HIDInterfaceInfo)
 		}
 
 		HIDInterfaceInfo->State.PrevFrameNum = USB_Device_GetFrameNumber();
+		return HID_USBTASK_NoError;
 	}
+	return HID_USBTASK_NoRW;
 }
 
 #endif
